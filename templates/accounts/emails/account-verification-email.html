@@ -1,0 +1,8 @@
+{% autoescape off %}
+
+Hi {{ user.name}},
+
+Welcome to Food Online. {{subject}}
+http://{{current_site}}{% url 'activate' uidb64=uid token=token %}
+
+{% endautoescape %}
