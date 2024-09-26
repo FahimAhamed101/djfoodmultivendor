@@ -61,9 +61,9 @@ def registerUser(request):
             user.save()
 
             # Send verification email
-            mail_subject = "Please activate your account"
-            mail_template = "accounts/emails/account_verification_email.html"
-            send_verification_email(request, user, mail_subject, mail_template)
+            # mail_subject = "Please activate your account"
+            # mail_template = "accounts/emails/account_verification_email.html"
+            # send_verification_email(request, user, mail_subject, mail_template)
 
             messages.success(request, "Your account has been created successfully!")
             return redirect("accounts:registerUser")
@@ -109,10 +109,9 @@ def registerVendor(request):
             vendor.save()
 
             # Send verification email
-            mail_subject = "Please activate your account"
-            mail_template = "accounts/emails/account_verification_email.html"
-            send_verification_email(request, user, mail_subject, mail_template)
-
+            # mail_subject = "Please activate your account"
+            # mail_template = "accounts/emails/account_verification_email.html"
+            # send_verification_email(request, user, mail_subject, mail_template)
             messages.success(request, "Your account has been created successfully! Please wait for the approval.")
             return redirect("accounts:registerVendor")
     else:
@@ -171,19 +170,14 @@ def logout(request):
 def myAccount(request):
     user = request.user
     redirectUrl = detectUser(user)
+    print("some")
     return redirect(redirectUrl)
 
 @login_required(login_url="accounts:login")
 @user_passes_test(check_role_customer)
 def customerDashboard(request):
-    orders = Order.objects.filter(user=request.user, is_ordered=True)
-    recent_orders = orders[:5]
-    context = {
-        "orders": orders,
-        "orders_count": orders.count(),
-        "recent_orders": recent_orders,
-    }
-    return render(request, "accounts/customerDashboard.html", context)
+    
+    return render(request, "accounts/customerDashboard.html")
 
 @login_required(login_url="accounts:login")
 @user_passes_test(check_role_vendor)

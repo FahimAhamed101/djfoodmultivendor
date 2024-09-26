@@ -29,7 +29,7 @@ class Category(models.Model):
 class FoodItem(models.Model):
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
     category_name = models.ForeignKey(
-        Category, models.CASCADE, related_name="fooditems", blank=True,null=True
+        Category,on_delete=models.CASCADE, related_name="fooditems", blank=True,null=True
     )
     food_title = models.CharField(max_length=100, blank=True,null=True)
     slug = models.SlugField(max_length=50, unique=True)
