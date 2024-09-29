@@ -10,7 +10,7 @@ from django.template.defaultfilters import slugify
 
 from vendor.forms import VendorForm
 from vendor.models import Vendor
-
+from orders.models import Order
 from .forms import UserForm
 from .models import User, UserProfile
 from .utils import detectUser, send_verification_email
@@ -61,9 +61,9 @@ def registerUser(request):
             user.save()
 
             # Send verification email
-            # mail_subject = "Please activate your account"
-            # mail_template = "accounts/emails/account_verification_email.html"
-            # send_verification_email(request, user, mail_subject, mail_template)
+            mail_subject = "Please activate your account"
+            mail_template = "accounts/emails/account_verification_email.html"
+            send_verification_email(request, user, mail_subject, mail_template)
 
             messages.success(request, "Your account has been created successfully!")
             return redirect("accounts:registerUser")
@@ -109,9 +109,10 @@ def registerVendor(request):
             vendor.save()
 
             # Send verification email
-            # mail_subject = "Please activate your account"
-            # mail_template = "accounts/emails/account_verification_email.html"
-            # send_verification_email(request, user, mail_subject, mail_template)
+            mail_subject = "Please activate your account"
+            mail_template = "accounts/emails/account_verification_email.html"
+            send_verification_email(request, user, mail_subject, mail_template)
+
             messages.success(request, "Your account has been created successfully! Please wait for the approval.")
             return redirect("accounts:registerVendor")
     else:
@@ -150,13 +151,11 @@ def login(request):
         email = request.POST["email"]
         password = request.POST["password"]
 
-        user = auth.authenticate(email="fahimahamedweb@gmail.com", password="admin1234")
+        user = auth.authenticate(email=email, password=password)
         if user is not None:
             auth.login(request, user)
             messages.success(request, "You are now logged in.")
-            print("sucesss")
             return redirect("accounts:myAccount")
-        
         else:
             messages.error(request, "Invalid login credentials")
     return render(request, "accounts/login.html")
@@ -170,14 +169,19 @@ def logout(request):
 def myAccount(request):
     user = request.user
     redirectUrl = detectUser(user)
-    print("some")
     return redirect(redirectUrl)
 
 @login_required(login_url="accounts:login")
 @user_passes_test(check_role_customer)
 def customerDashboard(request):
-    
-    return render(request, "accounts/customerDashboard.html")
+    orders = Order.objects.filter(user=request.user, is_ordered=True)
+    recent_orders = orders[:5]
+    context = {
+        "orders": orders,
+        "orders_count": orders.count(),
+        "recent_orders": recent_orders,
+    }
+    return render(request, "accounts/customerDashboard.html", context)
 
 @login_required(login_url="accounts:login")
 @user_passes_test(check_role_vendor)

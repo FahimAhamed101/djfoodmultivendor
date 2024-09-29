@@ -1,26 +1,17 @@
 from django.contrib import admin
 from .models import Category, FoodItem
 
-# Register your models here.
-
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ("category_name", "vendor", "created_at", "updated_at")
-    list_display_links = ("category_name",)
-    search_fields = ("category_name", "vendor__vendor_name")
     prepopulated_fields = {"slug": ("category_name",)}
+    list_display = ("category_name", "vendor", "updated_at")
+    search_fields = ("category_name", "vendor__vendor_name")
 
 
 class FoodItemAdmin(admin.ModelAdmin):
-    list_display = ("food_title", "vendor", "category_name", "price", "is_available")
-    list_display_links = ("food_title",)
-    search_fields = (
-        "food_title",
-        "price",
-        "vendor__vendor_name",
-        "category_name__category_name",
-    )
     prepopulated_fields = {"slug": ("food_title",)}
+    list_display = ("food_title", "category", "vendor", "price", "is_available", "updated_at")
+    search_fields = ("food_title", "category__category_name", "vendor__vendor_name", "price")
     list_filter = ("is_available",)
 
 
