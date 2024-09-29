@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 from decouple import config
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -119,11 +119,11 @@ USE_I18N = True
 
 USE_TZ = True
 #STATIC_ROOT = "static"
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
+
+#STATICFILES_DIRS = [ BASE_DIR / "static",]
    
-]
-# Static files (CSS, JavaScript, Images)
+   
+ Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
